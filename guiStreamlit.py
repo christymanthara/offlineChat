@@ -3,13 +3,16 @@ import numpy as np
 import random
 import time
 
-def response_generator():
-    response = random.choice(
+def response_generator(custom_response=None):
+    response = (custom_response
+        if custom_response is not None
+        else random.choice(
         [
             "Hello there! How can I assist you today?",
             "Hi, human! Is there anything I can help you with?",
             "Hi Boss,Do you need help?",
         ]
+        )
     )
     for word in response.split():
         yield word + " "
@@ -51,6 +54,6 @@ if prompt := st.chat_input("What's up. Ask me a question?"):
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        responses = st.write_stream(response)
+        response = st.write_stream(response_generator(response))
     # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": responses})
+    st.session_state.messages.append({"role": "assistant", "content": response})
